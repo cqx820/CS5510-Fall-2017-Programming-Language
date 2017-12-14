@@ -254,7 +254,7 @@
               [else (error 'interp "not a function")])]
     [appSecondArgK (a env next-k v-f vs)
                   (cond
-                    [(empty? (rest a)) (interp (first a) env (doAppK v-f next-k (extend-env v vs)))]
+                    [(empty? (rest a)) (interp (first a) env (doAppK v-f next-k (reverse (extend-env v vs))))]
                     [else (interp (first a) env (appSecondArgK (rest a) env next-k v-f (extend-env v vs)))])]
     
     [doNegK (next-k) (continue next-k (num* v (numV -1)))]
