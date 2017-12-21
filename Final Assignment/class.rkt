@@ -332,6 +332,14 @@
      (list (methodC 'mdist (plusC (getC (thisC) 'z)
                                   (ssendC (thisC) 'posn 'mdist (argC))))
            (methodC 'addDist (ssendC (thisC) 'posn 'addDist (argC))))))
+  
+  (define test-set-class
+    (classC 
+     'test-set-class
+     'object
+     (list 'x)
+     (list (methodC 'get (getC (thisC) 'x))                                
+           (methodC 'test (sendC (thisC) 'get (setC (thisC) 'x (numC 10)))))))
 
   (define posn27 (newC 'posn (list (numC 2) (numC 7))))
   (define posn35 (newC 'posn (list (numC 3) (numC 5)))) ;;added for test
@@ -343,7 +351,6 @@
 ;; ----------------------------------------
 
 (module+ test
-
   ;;Tests for Q4
   (test/exn (interp-posn (getC (nullC) 'x)) "null reference")
   (test/exn (interp-posn (sendC (nullC) 'addDist (numC 0))) "null reference")
@@ -355,6 +362,11 @@
         (numV 4))
   (test (interp-posn (setC (newC 'posn3D (list (numC 2) (numC 7) (numC 15))) 'z (numC 4)))
         (numV 4))
+
+  ;; (test (interp (sendC (newC 'test-set-class -10) 'test posn27) (numV -1) (numV -1))))
+  (test (interp (sendC (newC 'test-set-class (list (numC 15))) 'test (numC 5)) (list test-set-class) (numV -1) (numV -1))
+        (numV 10)) ;; Add imperative update test
+
   (test/exn (interp-posn (setC (numC 5) 'x (numC 4)))
             "not an object")
   (test/exn (interp-posn (setC (nullC) 'x (numC 4)))
